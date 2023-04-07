@@ -40,13 +40,13 @@ public class StartController implements Initializable {
         startLogin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                toLoginScreen(event);
+                toLoginScene(event);
             }
         });
 
     }
 
-    public void toLoginScreen(ActionEvent event) {
+    public void toLoginScene(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader();
 
         loader.setLocation(getClass().getResource("login.fxml"));
@@ -68,6 +68,7 @@ public class StartController implements Initializable {
         stage.show();
 
     }
+
 
 
 }

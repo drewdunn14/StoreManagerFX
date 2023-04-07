@@ -1,19 +1,28 @@
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
 import javax.swing.*;
 
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
+import javafx.stage.Stage;
 
 
 public class LoginController implements Initializable {
 
+    private Stage stage;
+    private Scene scene;
 
     @FXML
     private ResourceBundle resources;
@@ -29,6 +38,9 @@ public class LoginController implements Initializable {
 
     @FXML
     private Button loginButton;
+
+    @FXML
+    private Label incorrectLabel;
 
     DataAccess myDAO;
 
@@ -65,12 +77,44 @@ public class LoginController implements Initializable {
 
         if (foundUser != null) {
             System.out.println("User found!");
+            incorrectLabel.setText("");
             if (foundUser.isManager) {
                 System.out.println("User is manager!");
+                toSellerScene(event);
+            } else {
 
             }
+        } else {
+            incorrectLabel.setText("Incorrect UserID/Password");
         }
     }
+
+
+    public void toSellerScene(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader();
+
+        loader.setLocation(getClass().getResource("seller.fxml"));
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        Parent root = loader.getRoot();
+
+        scene = new Scene(root);
+        stage.setScene(scene);
+
+        SellerController sellerController = loader.getController();
+        sellerController.setRDA(myDAO);
+
+        stage.show();
+    }
+
+
+
+
 
     public void setRDA(DataAccess dao) {
         this.myDAO = dao;
