@@ -45,11 +45,11 @@
       <TextField fx:id="quantityText" alignment="CENTER" layoutX="437.0" layoutY="174.0" prefHeight="26.0" prefWidth="123.0" promptText="Enter Quantity" />
       <TableView fx:id="orderTableView" layoutY="32.0" prefHeight="368.0" prefWidth="396.0" style="-fx-background-color: #0C2340;">
         <columns>
-          <TableColumn prefWidth="48.0" text="ID" />
-          <TableColumn prefWidth="119.0" text="Name" />
-            <TableColumn prefWidth="62.0" text="Price" />
-            <TableColumn prefWidth="75.0" text="Quantity" />
-            <TableColumn prefWidth="91.0" text="Column X" />
+          <TableColumn fx:id="idTableColumn" prefWidth="60.0" text="ID" />
+          <TableColumn fx:id="nameTableColumn" prefWidth="107.0" text="Name" />
+            <TableColumn fx:id="priceTableColumn" prefWidth="73.0" text="Price" />
+            <TableColumn fx:id="quantityTableColumn" prefWidth="72.0" text="Quantity" />
+            <TableColumn fx:id="costTableColumn" prefWidth="83.0" text="Cost" />
         </columns>
       </TableView>
    </children>

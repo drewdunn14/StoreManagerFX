@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -42,7 +43,23 @@ public class CheckoutController implements Initializable {
     private TextField quantityText;
 
     @FXML
-    private TableView<?> orderTableView;
+    private TableView<ProductModel> orderTableView;
+
+    @FXML
+    private TableColumn<ProductModel, Integer> idTableColumn;
+
+    @FXML
+    private TableColumn<ProductModel, String> nameTableColumn;
+
+    @FXML
+    private TableColumn<ProductModel, Double> priceTableColumn;
+
+    @FXML
+    private TableColumn<ProductModel, Double> quantityTableColumn;
+
+    @FXML
+    private TableColumn<Double, Double> costTableColumn;
+
 
     DataAccess myDAO;
 
@@ -84,7 +101,9 @@ public class CheckoutController implements Initializable {
     }
 
 
-
+    private void addProductToTable() {
+        // TODO - work with adapters to implement methods to update the table.
+    }
 
 
 

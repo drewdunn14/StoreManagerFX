@@ -128,4 +128,12 @@ public class RemoteDataAdapter implements DataAccess {
 
         return null;
     }
+
+    public void addProduct() {
+        // TODO - method signature may need to be different
+    }
+
+
+
+
 }
