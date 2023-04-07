@@ -29,5 +29,6 @@
       <TextField fx:id="quantityText" alignment="CENTER" layoutX="65.0" layoutY="283.0" promptText="Quantity Available" />
       <Label fx:id="errorText" layoutX="70.0" layoutY="86.0" textFill="RED" />
       <Label fx:id="statusText" layoutX="68.0" layoutY="316.0" textFill="WHITE" />
+      <Pane layoutY="50.0" prefHeight="5.0" prefWidth="300.0" style="-fx-background-color: #E87722;" />
    </children>
 </AnchorPane>

@@ -82,7 +82,7 @@ public class LoginController implements Initializable {
                 System.out.println("User is manager!");
                 toSellerScene(event);
             } else {
-
+                toBuyerScene(event);
             }
         } else {
             incorrectLabel.setText("Incorrect UserID/Password");
@@ -112,6 +112,27 @@ public class LoginController implements Initializable {
         stage.show();
     }
 
+    public void toBuyerScene(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader();
+
+        loader.setLocation(getClass().getResource("checkout.fxml"));
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        Parent root = loader.getRoot();
+
+        scene = new Scene(root);
+        stage.setScene(scene);
+
+        CheckoutController checkoutController = loader.getController();
+        checkoutController.setRDA(myDAO);
+
+        stage.show();
+    }
 
 
 
@@ -119,6 +140,8 @@ public class LoginController implements Initializable {
     public void setRDA(DataAccess dao) {
         this.myDAO = dao;
     }
+
+
 
 
 
