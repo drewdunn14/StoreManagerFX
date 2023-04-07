@@ -13,9 +13,6 @@ public class MainApp extends Application {
         primaryStage.setTitle("Auburn Superstore");
         primaryStage.setScene(new Scene(root, 300, 300));
         primaryStage.show();
-
-
-
     }
 
 

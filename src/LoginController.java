@@ -72,6 +72,10 @@ public class LoginController implements Initializable {
         }
     }
 
+    public void setRDA(DataAccess dao) {
+        this.myDAO = dao;
+    }
+
 
 
 }

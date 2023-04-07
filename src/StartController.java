@@ -27,6 +27,11 @@ public class StartController implements Initializable {
     @FXML
     private Button startLogin;
 
+    public RemoteDataAdapter rda = new RemoteDataAdapter();
+
+    public StartController() {
+        rda.connect();
+    }
 
     @Override
     @FXML
@@ -56,6 +61,10 @@ public class StartController implements Initializable {
 
         scene = new Scene(root);
         stage.setScene(scene);
+
+        LoginController loginController = loader.getController();
+        loginController.setRDA(rda);
+
         stage.show();
 
     }
