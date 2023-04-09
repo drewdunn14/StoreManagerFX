@@ -25,6 +25,11 @@ public class CheckoutController implements Initializable {
     private Stage stage;
     private Scene scene;
 
+    private User loadedUser;
+
+    private Order order = new Order();
+    private static final DecimalFormat dfZero = new DecimalFormat("0.00");
+
     @FXML
     private ResourceBundle resources;
 
@@ -110,6 +115,14 @@ public class CheckoutController implements Initializable {
         });
 
 
+        checkoutButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                saveOrder(event);
+            }
+        });
+
+
     }
 
 
@@ -137,10 +150,6 @@ public class CheckoutController implements Initializable {
     }
 
 
-    private void addProductToTable() {
-        // TODO - work with adapters to implement methods to update the table.
-    }
-
 
 
     private void addToTable(ActionEvent event) {
@@ -151,6 +160,7 @@ public class CheckoutController implements Initializable {
             if (quantityEntered < productModel.quantity) {
 
                 productModel.quantity -= quantityEntered;
+
                 myDAO.saveProduct(productModel);
                 ProductModelBinded productModelBinded = new ProductModelBinded(productModel.productID, productModel.name, productModel.price, quantityEntered);
                 setSubtotalOrderCost(getSubtotalOrderCost() + productModelBinded.getCost());
@@ -173,6 +183,31 @@ public class CheckoutController implements Initializable {
     }
     public void setSubtotalOrderCost(double value) {
         subtotalOrderCost.set(value);
+    }
+
+
+    public void saveOrder(ActionEvent event) {
+        order.setOrderID(0);
+        order.setCustomerName(loadedUser.userName);
+        order.setTotalCost(Double.parseDouble(dfZero.format(subtotalOrderCost.get() * 1.09)));
+        order.setTotalTax(Double.parseDouble(dfZero.format(subtotalOrderCost.get() * 0.09)));
+        order.setDate();
+
+        for (ProductModelBinded binded: checkoutList) {
+            OrderLine line = new OrderLine();
+            line.setOrderID(0);
+            line.setProductID(binded.getProductID());
+            line.setQuantity(binded.getQuantity());
+            line.setCost(binded.getCost());
+            order.addLine(line);
+        }
+
+        System.out.println(order.toString());
+    }
+
+
+    public void setLoadedUser(User userIn) {
+        this.loadedUser = userIn;
     }
 
     public void setRDA(DataAccess dao) {

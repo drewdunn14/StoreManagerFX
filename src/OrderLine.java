@@ -36,4 +36,13 @@ public class OrderLine {
     public void setProductID(int productID) {
         this.productID = productID;
     }
+
+
+    public String toString() {
+        String result = "ProductID: " + this.productID + "\tOrderID: " + this.orderID + "\tQuantity: "
+                + this.quantity + "\tCost: " + this.cost;
+        return result;
+    }
+
+
 }

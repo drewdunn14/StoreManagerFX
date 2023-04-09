@@ -1,4 +1,8 @@
 import java.sql.Date;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -11,6 +15,7 @@ public class Order {
     private String date;
 
     private List<OrderLine> lines;
+    private static final DecimalFormat dfZero = new DecimalFormat("0.00");
 
     public Order() {
         lines = new ArrayList<>();
@@ -20,8 +25,10 @@ public class Order {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDate() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        this.date = dtf.format(now);
     }
 
     public double getTotalCost() {
@@ -37,7 +44,7 @@ public class Order {
     }
 
     public void setTotalTax(double totalTax) {
-        this.totalTax = totalTax;
+        this.totalTax = Double.parseDouble(dfZero.format(totalTax));
     }
 
     public int getOrderID() {
@@ -67,4 +74,17 @@ public class Order {
     public List<OrderLine> getLines() {
         return lines;
     }
+
+    @Override
+    public String toString() {
+        String result = "orderID: " + this.orderID + "\tCustomer: " + this.customerName + "\tTotal: " + this.totalCost
+                + "\tTax: " + this.totalTax + "\tDate: " + this.date + "\n";
+        for (OrderLine line: lines) {
+            result += line.toString() + "\n";
+        }
+        return result;
+    }
+
+
+
 }

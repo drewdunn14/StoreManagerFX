@@ -24,6 +24,8 @@ public class LoginController implements Initializable {
     private Stage stage;
     private Scene scene;
 
+    private User loadedUser;
+
     @FXML
     private ResourceBundle resources;
 
@@ -54,7 +56,6 @@ public class LoginController implements Initializable {
                 getLoginText(event);
             }
         });
-
     }
 
     public LoginController() {
@@ -73,12 +74,12 @@ public class LoginController implements Initializable {
 
         System.out.println("Login with username = " + username + " and password = " + passWord);
 
-        User foundUser = myDAO.loadUser(user);
+        loadedUser = myDAO.loadUser(user);
 
-        if (foundUser != null) {
+        if (loadedUser != null) {
             System.out.println("User found!");
             incorrectLabel.setText("");
-            if (foundUser.isManager) {
+            if (loadedUser.isManager) {
                 System.out.println("User is manager!");
                 toSellerScene(event);
             } else {
@@ -130,6 +131,7 @@ public class LoginController implements Initializable {
 
         CheckoutController checkoutController = loader.getController();
         checkoutController.setRDA(myDAO);
+        checkoutController.setLoadedUser(loadedUser);
 
         stage.show();
     }

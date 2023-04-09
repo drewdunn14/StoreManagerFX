@@ -1,6 +1,11 @@
 import javafx.beans.property.*;
 
+import java.text.DecimalFormat;
+
 public class ProductModelBinded {
+
+    //Used to ensure that when 'cost' is set there is no big ugly trailing decimal.
+    private static final DecimalFormat dfZero = new DecimalFormat("0.00");
 
     //IntegerProperty to emulate "productID" of ProductModel class.
     private IntegerProperty productID = new SimpleIntegerProperty();
@@ -22,7 +27,7 @@ public class ProductModelBinded {
         setName(nameIn);
         setPrice(priceIn);
         setQuantity(quantityIn);
-        setCost(price.get() * quantity.get());
+        setCost(Double.parseDouble(dfZero.format(price.get() * quantity.get())));
     }
 
     // start of getter/setter methods for productID
