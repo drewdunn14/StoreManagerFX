@@ -6,6 +6,7 @@ public class RequestModel {
     static public int LOAD_PRODUCT_REQUEST = 3;
     static public int SAVE_PRODUCT_REQUEST = 33;
     static public int USER_REQUEST = 4;
+    static public int ORDER_ID_REQUEST = 5;
 
 
     public int code;

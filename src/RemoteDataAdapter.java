@@ -44,8 +44,6 @@ public class RemoteDataAdapter implements DataAccess {
             if (res.code == ResponseModel.OK) {
                 System.out.println(model.name + " successfully saved to database.");
             }
-
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -81,8 +79,6 @@ public class RemoteDataAdapter implements DataAccess {
                     System.out.println("Product name = " + model.name);
                     return model; // found this product and return!!!
                 }
-
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -118,19 +114,61 @@ public class RemoteDataAdapter implements DataAccess {
                 System.out.println("UserID " + "\"" + foundUser.userID + "\"" + " is verified.");
                 return foundUser;
             }
-
-
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-
         return null;
     }
 
-    public void addProduct() {
-        // TODO - method signature may need to be different
+    @Override
+    public int requestOrderID() {
+        RequestModel req = new RequestModel();
+        req.code = RequestModel.ORDER_ID_REQUEST;
+        req.body = gson.toJson(0);
+
+        String json = gson.toJson(req);
+        try {
+            dos.writeUTF(json);
+            String received = dis.readUTF();
+            System.out.println("Server response:" + received);
+            ResponseModel res = gson.fromJson(received, ResponseModel.class);
+            if (res.code == ResponseModel.UNKNOWN_REQUEST) {
+                System.out.println("The request is not recognized by the Server");
+                return 0;
+            } else if (res.code == ResponseModel.OK) {
+                int OrderID = gson.fromJson(res.body, int.class);
+                return OrderID;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public void saveOrder(Order order) {
+        RequestModel req = new RequestModel();
+        req.code = req.ORDER_REQUEST;
+        req.body = gson.toJson(order);
+
+        String json = gson.toJson(req);
+
+        try {
+            dos.writeUTF(json);
+
+            String received = dis.readUTF();
+
+            System.out.println("Server response:" + received);
+
+            ResponseModel res = gson.fromJson(received, ResponseModel.class);
+
+            if (res.code == ResponseModel.OK) {
+                Order savedOrder = gson.fromJson(res.body, Order.class);
+                //System.out.println("OrderID #" + savedOrder.getOrderID() + " has been saved to database." );
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 

@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ResourceBundle;
@@ -60,6 +61,8 @@ public class CheckoutController implements Initializable {
     @FXML
     private TextField totalCostText;
 
+    @FXML
+    private Label invalidQuantityLabel;
 
     private DoubleProperty subtotalOrderCost = new SimpleDoubleProperty(0);
 
@@ -118,7 +121,11 @@ public class CheckoutController implements Initializable {
         checkoutButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                saveOrder(event);
+                try {
+                    saveOrder(event);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -158,7 +165,7 @@ public class CheckoutController implements Initializable {
         if (productModel != null) {
             double quantityEntered = Double.parseDouble(quantityText.getText().trim());
             if (quantityEntered < productModel.quantity) {
-
+                invalidQuantityLabel.setText("");
                 productModel.quantity -= quantityEntered;
 
                 myDAO.saveProduct(productModel);
@@ -167,9 +174,8 @@ public class CheckoutController implements Initializable {
                 checkoutList.add(productModelBinded);
                 subtotalText.setText(String.valueOf(NumberFormat.getCurrencyInstance().format(subtotalOrderCost.get())));
                 totalCostText.setText(String.valueOf(NumberFormat.getCurrencyInstance().format(subtotalOrderCost.get() * 1.09)));
-
-
-
+            } else {
+                invalidQuantityLabel.setText("Invalid Quantity");
             }
         }
     }
@@ -186,8 +192,10 @@ public class CheckoutController implements Initializable {
     }
 
 
-    public void saveOrder(ActionEvent event) {
-        order.setOrderID(0);
+    public void saveOrder(ActionEvent event) throws SQLException {
+
+        int requestedOrderID = myDAO.requestOrderID();
+        order.setOrderID(requestedOrderID);
         order.setCustomerName(loadedUser.userName);
         order.setTotalCost(Double.parseDouble(dfZero.format(subtotalOrderCost.get() * 1.09)));
         order.setTotalTax(Double.parseDouble(dfZero.format(subtotalOrderCost.get() * 0.09)));
@@ -195,13 +203,14 @@ public class CheckoutController implements Initializable {
 
         for (ProductModelBinded binded: checkoutList) {
             OrderLine line = new OrderLine();
-            line.setOrderID(0);
+            line.setOrderID(requestedOrderID);
             line.setProductID(binded.getProductID());
             line.setQuantity(binded.getQuantity());
             line.setCost(binded.getCost());
             order.addLine(line);
         }
 
+        myDAO.saveOrder(order);
         System.out.println(order.toString());
     }
 

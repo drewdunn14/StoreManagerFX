@@ -107,7 +107,55 @@ public class SQLiteDataAdapter implements DataAccess {
         return null;
     }
 
+    @Override
+    public int requestOrderID() {
+        try {
+            int lastOrderID = 0;
+            Statement findLastOrderID = conn.createStatement();
+            ResultSet resultSet = findLastOrderID.executeQuery("SELECT MAX(OrderID) FROM Orders");
+            if (resultSet.next()) {
+                lastOrderID = resultSet.getInt(1);
+            }
+            return (lastOrderID + 1);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
 
+    @Override
+    public void saveOrder(Order order) throws SQLException {
+
+        try {
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO Orders VALUES (?, ?, ?, ?, ?)");
+            statement.setInt(1, order.getOrderID());
+            statement.setString(2, order.getDate());
+            statement.setString(3, order.getCustomerName());
+            statement.setDouble(4, order.getTotalCost());
+            statement.setDouble(5, order.getTotalTax());
+
+            statement.execute();    // commit to the database;
+            statement.close();
+
+            statement = conn.prepareStatement("INSERT INTO OrderLine VALUES (?, ?, ?, ?)");
+            for (OrderLine line: order.getLines()) { // store for each order line!
+                statement.setInt(1, order.getOrderID());
+                statement.setInt(2, line.getProductID());
+                statement.setDouble(3, line.getQuantity());
+                statement.setDouble(4, line.getCost());
+
+                statement.execute();    // commit to the database;
+            }
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
 
 
 

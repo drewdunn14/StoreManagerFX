@@ -1,3 +1,5 @@
+import java.sql.SQLException;
+
 public interface DataAccess {
     void connect();
 
@@ -6,4 +8,9 @@ public interface DataAccess {
     ProductModel loadProduct(int productID);
 
     User loadUser(User user);
+
+    int requestOrderID();
+
+    void saveOrder(Order order) throws SQLException;
+
 }

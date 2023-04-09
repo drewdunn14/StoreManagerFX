@@ -4,8 +4,10 @@
 
 import java.io.*;
 import java.net.*;
+import java.sql.SQLException;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
 
 // Server class
@@ -150,15 +152,32 @@ class ClientHandler extends Thread
                     }
                 }
 
-                //Start of response for saving order
+                //Start of response for requesting an orderID
+                else if (req.code == RequestModel.ORDER_ID_REQUEST) {
+
+                    int OrderID = dao.requestOrderID();
+
+                    if (OrderID != 0) {
+                        res.code = ResponseModel.OK;
+                        res.body = String.valueOf(OrderID);
+                    }
 
 
 
+                //Start of response for saving an order
+                } else if (req.code == RequestModel.ORDER_REQUEST) {
 
+                    System.out.println(req.body);
 
+                    Order order = gson.fromJson(req.body, Order.class);
 
+                    if (order != null) {
+                        dao.saveOrder(order);
+                        res.code = ResponseModel.OK;
+                        res.body = "";
+                    }
 
-                else {
+                } else {
                     res.code = ResponseModel.UNKNOWN_REQUEST;
                     res.body = "";
                 }
@@ -171,6 +190,8 @@ class ClientHandler extends Thread
                 dos.flush();
 
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
