@@ -1,7 +1,13 @@
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -10,10 +16,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 public class CheckoutController implements Initializable {
@@ -34,7 +38,7 @@ public class CheckoutController implements Initializable {
     private TextField idText;
 
     @FXML
-    private Button orderButton;
+    private Button addProductButton;
 
     @FXML
     private Button checkoutButton;
@@ -43,22 +47,37 @@ public class CheckoutController implements Initializable {
     private TextField quantityText;
 
     @FXML
-    private TableView<ProductModel> orderTableView;
+    private TextField subtotalText;
 
     @FXML
-    private TableColumn<ProductModel, Integer> idTableColumn;
+    private TextField taxText;
 
     @FXML
-    private TableColumn<ProductModel, String> nameTableColumn;
+    private TextField totalCostText;
+
+
+    private DoubleProperty subtotalOrderCost = new SimpleDoubleProperty(0);
 
     @FXML
-    private TableColumn<ProductModel, Double> priceTableColumn;
+    public ObservableList<ProductModelBinded> checkoutList = FXCollections.observableArrayList();
 
     @FXML
-    private TableColumn<ProductModel, Double> quantityTableColumn;
+    private TableView<ProductModelBinded> orderTableView = new TableView<ProductModelBinded>();
 
     @FXML
-    private TableColumn<Double, Double> costTableColumn;
+    private TableColumn<ProductModelBinded, Integer> idTableColumn;
+
+    @FXML
+    private TableColumn<ProductModelBinded, String> nameTableColumn;
+
+    @FXML
+    private TableColumn<ProductModelBinded, Double> priceTableColumn;
+
+    @FXML
+    private TableColumn<ProductModelBinded, Double> quantityTableColumn;
+
+    @FXML
+    private TableColumn<ProductModelBinded, Double> costTableColumn;
 
 
     DataAccess myDAO;
@@ -66,10 +85,27 @@ public class CheckoutController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        orderTableView.setPlaceholder(new Label("Nothing in your cart yet..."));
+
+        idTableColumn.setCellValueFactory(new PropertyValueFactory<ProductModelBinded, Integer>("productID"));
+        nameTableColumn.setCellValueFactory(new PropertyValueFactory<ProductModelBinded, String>("name"));
+        priceTableColumn.setCellValueFactory(new PropertyValueFactory<ProductModelBinded, Double>("price"));
+        quantityTableColumn.setCellValueFactory(new PropertyValueFactory<ProductModelBinded, Double>("quantity"));
+        costTableColumn.setCellValueFactory(new PropertyValueFactory<ProductModelBinded, Double>("cost"));
+        orderTableView.setItems(checkoutList);
+
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 toLoginScene(event);
+            }
+        });
+
+
+        addProductButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                addToTable(event);
             }
         });
 
@@ -106,6 +142,38 @@ public class CheckoutController implements Initializable {
     }
 
 
+
+    private void addToTable(ActionEvent event) {
+        int productID = Integer.parseInt(idText.getText().trim());
+        ProductModel productModel = myDAO.loadProduct(productID);
+        if (productModel != null) {
+            double quantityEntered = Double.parseDouble(quantityText.getText().trim());
+            if (quantityEntered < productModel.quantity) {
+
+                productModel.quantity -= quantityEntered;
+                myDAO.saveProduct(productModel);
+                ProductModelBinded productModelBinded = new ProductModelBinded(productModel.productID, productModel.name, productModel.price, quantityEntered);
+                setSubtotalOrderCost(getSubtotalOrderCost() + productModelBinded.getCost());
+                checkoutList.add(productModelBinded);
+                subtotalText.setText(String.valueOf(NumberFormat.getCurrencyInstance().format(subtotalOrderCost.get())));
+                totalCostText.setText(String.valueOf(NumberFormat.getCurrencyInstance().format(subtotalOrderCost.get() * 1.09)));
+
+
+
+            }
+        }
+    }
+
+
+    public DoubleProperty subtotalOrderCostProperty() {
+        return subtotalOrderCost;
+    }
+    public double getSubtotalOrderCost() {
+        return subtotalOrderCost.get();
+    }
+    public void setSubtotalOrderCost(double value) {
+        subtotalOrderCost.set(value);
+    }
 
     public void setRDA(DataAccess dao) {
         this.myDAO = dao;

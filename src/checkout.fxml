@@ -17,7 +17,7 @@
                <font>
                   <Font name="System Bold" size="13.0" />
                </font></Label>
-            <Button fx:id="backButton" layoutX="5.0" layoutY="3.0" mnemonicParsing="false" text="Back" />
+            <Button fx:id="backButton" layoutX="5.0" layoutY="3.0" mnemonicParsing="false" text="Logout" />
          </children>
       </Pane>
       <Pane layoutX="395.0" layoutY="32.0" prefHeight="368.0" prefWidth="7.0" style="-fx-background-color: #E87722;" />
@@ -40,17 +40,27 @@
          </font>
       </Label>
       <TextField fx:id="idText" alignment="CENTER" layoutX="437.0" layoutY="126.0" prefHeight="26.0" prefWidth="123.0" promptText="Enter Product ID" />
-      <Button fx:id="orderButton" layoutX="438.0" layoutY="242.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="123.0" text="Add To Order" textAlignment="CENTER" />
+      <Button fx:id="addProductButton" layoutX="438.0" layoutY="242.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="123.0" text="Add To Order" textAlignment="CENTER" />
       <Button fx:id="checkoutButton" layoutX="437.0" layoutY="292.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="123.0" text="Checkout" textAlignment="CENTER" />
       <TextField fx:id="quantityText" alignment="CENTER" layoutX="437.0" layoutY="174.0" prefHeight="26.0" prefWidth="123.0" promptText="Enter Quantity" />
-      <TableView fx:id="orderTableView" layoutY="32.0" prefHeight="368.0" prefWidth="396.0" style="-fx-background-color: #0C2340;">
+      <TableView fx:id="orderTableView" layoutY="32.0" prefHeight="330.0" prefWidth="396.0" style="-fx-background-color: #0C2340;">
         <columns>
-          <TableColumn fx:id="idTableColumn" prefWidth="60.0" text="ID" />
-          <TableColumn fx:id="nameTableColumn" prefWidth="107.0" text="Name" />
+          <TableColumn fx:id="idTableColumn" prefWidth="59.0" text="ID" />
+          <TableColumn fx:id="nameTableColumn" prefWidth="101.0" text="Name" />
             <TableColumn fx:id="priceTableColumn" prefWidth="73.0" text="Price" />
-            <TableColumn fx:id="quantityTableColumn" prefWidth="72.0" text="Quantity" />
-            <TableColumn fx:id="costTableColumn" prefWidth="83.0" text="Cost" />
+            <TableColumn fx:id="quantityTableColumn" minWidth="0.0" prefWidth="73.0" text="Quantity" />
+            <TableColumn fx:id="costTableColumn" prefWidth="88.0" text="Cost" />
         </columns>
       </TableView>
+      <Pane layoutY="367.0" prefHeight="32.0" prefWidth="396.0" style="-fx-background-color: #ADD8E6;">
+         <children>
+            <TextField fx:id="subtotalText" editable="false" layoutX="75.0" layoutY="3.0" prefHeight="26.0" prefWidth="64.0" promptText="SubtotalText" text="0.00" />
+            <Label layoutX="14.0" layoutY="8.0" text="Subtotal:" />
+            <TextField fx:id="taxText" editable="false" layoutX="187.0" layoutY="3.0" prefHeight="26.0" prefWidth="64.0" text="9.00%" />
+            <Label layoutX="155.0" layoutY="8.0" text="Tax:" />
+            <TextField fx:id="totalCostText" editable="false" layoutX="316.0" layoutY="2.0" prefHeight="26.0" prefWidth="64.0" promptText="SubtotalText" text="0.00" />
+            <Label layoutX="275.0" layoutY="8.0" text="Total:" />
+         </children>
+      </Pane>
    </children>
 </AnchorPane>
