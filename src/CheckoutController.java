@@ -123,6 +123,7 @@ public class CheckoutController implements Initializable {
             public void handle(ActionEvent event) {
                 try {
                     saveOrder(event);
+                    toReceiptScene(event);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -157,8 +158,6 @@ public class CheckoutController implements Initializable {
     }
 
 
-
-
     private void addToTable(ActionEvent event) {
         int productID = Integer.parseInt(idText.getText().trim());
         ProductModel productModel = myDAO.loadProduct(productID);
@@ -174,6 +173,8 @@ public class CheckoutController implements Initializable {
                 checkoutList.add(productModelBinded);
                 subtotalText.setText(String.valueOf(NumberFormat.getCurrencyInstance().format(subtotalOrderCost.get())));
                 totalCostText.setText(String.valueOf(NumberFormat.getCurrencyInstance().format(subtotalOrderCost.get() * 1.09)));
+                idText.setText("");
+                quantityText.setText("");
             } else {
                 invalidQuantityLabel.setText("Invalid Quantity");
             }
@@ -209,7 +210,6 @@ public class CheckoutController implements Initializable {
             line.setCost(binded.getCost());
             order.addLine(line);
         }
-
         myDAO.saveOrder(order);
         System.out.println(order.toString());
     }
@@ -221,6 +221,32 @@ public class CheckoutController implements Initializable {
 
     public void setRDA(DataAccess dao) {
         this.myDAO = dao;
+    }
+
+    public void toReceiptScene(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader();
+
+        loader.setLocation(getClass().getResource("receipt.fxml"));
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        Parent root = loader.getRoot();
+
+        scene = new Scene(root);
+        stage.setScene(scene);
+
+        ReceiptController receiptController = loader.getController();
+        receiptController.setRDA(myDAO);
+        receiptController.setLoadedUser(loadedUser);
+        receiptController.setOrder(order);
+        receiptController.setSubtotal(getSubtotalOrderCost());
+        receiptController.initData();
+
+        stage.show();
     }
 
 

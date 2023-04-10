@@ -151,13 +151,5 @@ public class SQLiteDataAdapter implements DataAccess {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-
-
     }
-
-
-
-
 }
